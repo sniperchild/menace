@@ -1,39 +1,53 @@
 import random
+import numpy as np
 # To Add - argparse
 
 class Neuron:
     '''
     Individual neuron with activatio bis and backprop
     '''
-    def __init__(self,weight_size) -> None:
+    def __init__(self,initial,weight_size) -> None:
         # bias
         # weight
-        self.bias = random.random()
-        self.weights = [random.random() for _ in weight_size]
+        self.bias = np.random.random()
+        self.weights = np.random.random(weight_size)
+        self.initial = initial
 
     def activate(self,inputs):
+        print("inputs",inputs)
+        if self.initial:
+            print("return")
+            return inputs
+        print("weights",self.weights)
         # multiply weights by inputs and add bias
-        output = self.bias + []
-
-    numpy muliply here
+        output = self.bias + np.dot(self.weights,inputs)
+        print(output)
+        return output
 
 class Layer:
-    def __init__(self,num,size) -> None:
+    def __init__(self,num,size,layers) -> None:
         if num == 0:
             #initial layer - no weights
-            self.neurons = [Neuron() for _ in size]
+            self.neurons = [Neuron(True,0) for _ in range(size)]
             self.input_layer = True
+
         else:
-            self.neurons = [Neuron() for _ in size]
+            self.neurons = [Neuron(False,layers[num-1]) for _ in range(size)]
             self.input_layer = False
+
+        self.outputs = np.zeros(size)
+        print("init")
 
     def run(self,inputs):
 
-        for neuron in self.neurons:
-            output = neuron.activate(inputs)
+        self.outputs
 
+        for idx,neuron in enumerate(self.neurons):
+            print(idx)
+            print(neuron)
+            self.outputs[idx] = neuron.activate(inputs)
 
-        return outputs
+        return self.outputs
 
 
 class Perceptron:
@@ -46,12 +60,12 @@ class Perceptron:
         # input layer
         # middle layer
         # outer layer
-        self.layers = [Layer(num,size) for num,size in enumerate(layers)]
+        self.layers = [Layer(num,size,layers) for num,size in enumerate(layers)]
 
 
     def run(self,input):
         
-        for layer in layers:
+        for layer in self.layers:
             input = layer.run(input)
 
         return input
@@ -63,7 +77,7 @@ def main():
 
     # instantiate the structure
 
-    p = Perceptron(9,16,9)
+    p = Perceptron([9,16,9])
 
     #run_the_network
 
